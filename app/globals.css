@@ -216,6 +216,9 @@
   .sidebar-link {
     @apply flex gap-3 items-center py-1 md:p-3 2xl:p-4 rounded-lg justify-center xl:justify-start;
   }
+  .bg-bank-gradient {
+    background: linear-gradient(90deg, #0179fe 0%, #4893ff 100%);
+  }
 
   .sidebar-label {
     @apply text-[16px] font-semibold max-xl:hidden;
@@ -251,17 +254,23 @@
   .form-btn {
     /* @apply text-[16px] rounded-lg border border-[#0179FE] font-semibold text-white ; */
     /* border-bankGradient bg-bankGradient shadow-form*/
-    @apply text-[16px] rounded-lg border border-[#0179FE] font-semibold text-white ;
-    background-image: linear-gradient(90deg, #0179FE 0%, #0893FF 100%);
+    @apply text-[16px] rounded-lg border border-[#0179FE] font-semibold text-white cursor-pointer;
+    background-image: linear-gradient(90deg, #0179fe 0%, #0893ff 100%);
   }
 
   .form-link {
-    @apply text-[14px] cursor-pointer font-medium ;
+    @apply text-[14px] cursor-pointer font-medium;
     /* text-bankGradient */
   }
 
+  /* PlaidLink */
+  .plaidlink-primary {
+    @apply text-[16px] rounded-lg border font-semibold text-white cursor-pointer;
+    background-image: linear-gradient(90deg, #0179fe 0%, #0893ff 100%);
+    /* border-bankGradient bg-bank-gradient shadow-form*/
+  }
 
-   /* Footer */
+  /* Footer */
   .footer {
     @apply flex cursor-pointer items-center justify-between gap-2 py-6;
   }

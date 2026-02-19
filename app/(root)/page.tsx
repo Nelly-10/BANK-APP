@@ -6,20 +6,35 @@ import RightSidebar from '@/components/RightSidebar';
 import { getLoggedInUser } from "@/lib/actions/user.actions";
 
 
+
+
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
   const loggedIn = await getLoggedInUser();
   const accounts = await getAccounts({
     userId: loggedIn.$id
-  })
+  });
+  // console.log("accounts", accounts); { data: [], totalBanks: 0, totalCurrentBalance: 0 }
 
-
-  // if(!accounts) return;
-  // const accounts = 2;
-
+  if (!accounts) return;
+  
+  
   const accountsData = accounts?.data;
-  const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
+  // console.log("accountsData", accountsData); []
 
-  const account = await getAccount({ appwriteItemId })
+  // Error: Route "/" used `searchParams.page`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+  //   at Home (app\(root)\page.tsx:11:43)
+
+
+  const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
+  // console.log("appwriteItemId", appwriteItemId);  undefined
+
+
+  const account = await getAccount({ appwriteItemId });
+
+
+  
+
+  // console.log({accountsData, account});
 
   return (
     <section className='home'>
@@ -34,7 +49,7 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
 
           <TotalBalanceBox
             accounts={accountsData}
-            totalBanks={accounts?.totalBanks}    
+            totalBanks={accounts?.totalBanks}
             totalCurrentBalance={accounts?.totalCurrentBalance}
           />
         </header>
@@ -48,7 +63,7 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
 
       </div>
 
-      <RightSidebar 
+      <RightSidebar
         user={loggedIn}
         transactions={account?.transactions}
         banks={accountsData?.slice(0, 2)}
@@ -59,3 +74,18 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
 }
 
 export default Home;
+
+// accountId
+// bankId
+// accessToken
+// fundingSourceUrl
+// shareableUrl
+// userId
+
+// The Most Likely Cause
+
+// Based on your flow, I strongly suspect:
+
+// 👉 accountsData is empty when page loads
+// OR
+// 👉 getAccounts() is not returning appwriteItemId

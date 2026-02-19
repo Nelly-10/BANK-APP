@@ -1,12 +1,12 @@
 "use server";
 
 import {
-  ACHClass,
-  CountryCode,
-  TransferAuthorizationCreateRequest,
-  TransferCreateRequest,
-  TransferNetwork,
-  TransferType,
+    ACHClass,
+    CountryCode,
+    TransferAuthorizationCreateRequest,
+    TransferCreateRequest,
+    TransferNetwork,
+    TransferType,
 } from "plaid";
 
 import { getBank, getBanks } from "./user.actions";
@@ -46,19 +46,21 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
                     appwriteItemId: bank.$id,
                     sharaebleId: bank.shareableId,
                 };
+                // console.log(account);
 
                 return account;
             })
         );
+        // console.log(accounts);
 
 
 
-        // const totalBanks = accounts.length;
-        // const totalCurrentBalance = accounts.reduce((total, account) => {
-        //     return total + account.currentBalance;
-        // }, 0);
+        const totalBanks = accounts.length;
+        const totalCurrentBalance = accounts.reduce((total, account) => {
+            return total + account.currentBalance;
+        }, 0);
 
-        return parseStringify({ data: accounts });
+        return parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
 
     } catch (error) {
         console.error("An error occurred while getting the accounts:", error);
@@ -67,14 +69,19 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
 
 export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     try {
+
         // get bank from db
         const bank = await getBank({ documentId: appwriteItemId });
+        // console.log(bank);
+
 
         // get account info from plaid
         const accountsResponse = await plaidClient.accountsGet({
             access_token: bank.accessToken,
         });
+
         const accountData = accountsResponse.data.accounts[0];
+
 
         // get transfer transactions from appwrite
 
@@ -96,9 +103,9 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 
         // get institution info from plaid
 
-        // const institution = await getInstitution({
-        //     institutionId: accountsResponse.data.item.institution_id!,
-        // });
+        const institution = await getInstitution({
+            institutionId: accountsResponse.data.item.institution_id!,
+        });
 
         // const transactions = await getTransactions({
         //     accessToken: bank?.accessToken,
@@ -108,7 +115,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
             id: accountData.account_id,
             availableBalance: accountData.balances.available!,
             currentBalance: accountData.balances.current!,
-            // institutionId: institution.institution_id,
+            institutionId: institution.institution_id,
             name: accountData.name,
             officialName: accountData.official_name,
             mask: accountData.mask!,
@@ -117,6 +124,12 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
             appwriteItemId: bank.$id,
         };
 
+        // sort transactions by date such that the most recent transaction is first
+        // const allTransactions = [...transactions, ...transferTransactions].sort(
+        //     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        // );
+
+
         return parseStringify({
             data: account,
             // transactions: allTransactions,
@@ -124,25 +137,25 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 
 
     } catch (error) {
-
+        console.error("An error occurred while getting the account:", error);
     }
 }
 
 
 // Get bank info
 export const getInstitution = async ({
-  institutionId,
+    institutionId,
 }: getInstitutionProps) => {
-  try {
-    const institutionResponse = await plaidClient.institutionsGetById({
-      institution_id: institutionId,
-      country_codes: ["US"] as CountryCode[],
-    });
+    try {
+        const institutionResponse = await plaidClient.institutionsGetById({
+            institution_id: institutionId,
+            country_codes: ["US"] as CountryCode[],
+        });
 
-    const intitution = institutionResponse.data.institution;
+        const intitution = institutionResponse.data.institution;
 
-    return parseStringify(intitution);
-  } catch (error) {
-    console.error("An error occurred while getting the accounts:", error);
-  }
+        return parseStringify(intitution);
+    } catch (error) {
+        console.error("An error occurred while getting the accounts:", error);
+    }
 };

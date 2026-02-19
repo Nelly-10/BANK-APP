@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-// import { z } from "zod"
+import { z } from "zod"
 import { useForm } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authFormSchema } from '@/lib/utils';
@@ -23,7 +23,6 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { signIn, signUp } from '@/lib/actions/user.actions';
 import { useRouter } from 'next/navigation';
-import z from 'zod';
 import PlaidLink from './PlaidLink';
 
 
@@ -35,9 +34,19 @@ const AuthForm = ({ type }: { type: string }) => {
 
     const formSchema = authFormSchema(type);
 
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            firstName: "",
+            lastName: "",
+            address1: "",
+            city: "",
+            state: "",
+            postalCode: "",
+            dateOfBirth: "",
+            ssn: "",
+
             email: "",
             password: ''
         },
@@ -45,45 +54,50 @@ const AuthForm = ({ type }: { type: string }) => {
 
     // 2. Define a submit handler.
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-      setIsLoading(true);
+        setIsLoading(true);
+        // console.log(data);
 
-      try {
-        // Sign up with Appwrite & create plaid token
-        
-        if(type === 'sign-up') {
-          const userData = {
-            firstName: data.firstName!,
-            lastName: data.lastName!,
-            address1: data.address1!,
-            city: data.city!,
-            state: data.state!,
-            postalCode: data.postalCode!,
-            dateOfBirth: data.dateOfBirth!,
-            ssn: data.ssn!,
-            email: data.email,
-            password: data.password
-          }
+        try {
+            // Sign up with Appwrite & create plaid token
 
-          const newUser = await signUp(userData);
+            if (type === 'sign-up') {
+                const userData = {
+                    firstName: data.firstName!,
+                    lastName: data.lastName!,
+                    address1: data.address1!,
+                    city: data.city!,
+                    state: data.state!,
+                    postalCode: data.postalCode!,
+                    dateOfBirth: data.dateOfBirth!,
+                    ssn: data.ssn!,
+                    email: data.email,
+                    password: data.password
+                }
 
-          setUser(newUser);
+                const newUser = await signUp(userData);
+                console.log(newUser);
+
+
+
+                setUser(newUser);
+            }
+
+            if (type === 'sign-in') {
+                const response = await signIn({
+                    email: data.email,
+                    password: data.password,
+                })
+
+                if (response) router.push('/');
+                console.log("sign-in", response);
+            }
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
 
-        if(type === 'sign-in') {
-          const response = await signIn({
-            email: data.email,
-            password: data.password,
-          })
-
-        //   if(response) router.push('/')
-        }
-
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-      
     }
 
 
@@ -174,7 +188,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         </Link>
                     </footer>
                 </>
-            )}
+             )} 
 
         </section>
     )

@@ -23,7 +23,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
               {user.firstName} {user.lastName}
             </h1>
             <p className="profile-email">
-              {user.email}
+              {/* {user.email} */}
             </p>
           </div>
         </div>

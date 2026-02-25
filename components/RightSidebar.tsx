@@ -10,11 +10,11 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
   const categories: CategoryCount[] = countTransactionCategories(transactions);
 
   return (
-    <aside className="right-sidebar">
+    <aside className="right-sidebar scrollbar-hide">
       <section className="flex flex-col pb-8">
         <div className="profile-banner" />
         <div className="profile">
-          <div className="profile-img">
+          <div className="profile-img flex-center">
             <span className="text-5xl font-bold text-blue-500">{user.firstName[0]}</span>
           </div>
 
@@ -23,7 +23,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
               {user.firstName} {user.lastName}
             </h1>
             <p className="profile-email">
-              {/* {user.email} */}
+              {user.email}
             </p>
           </div>
         </div>
@@ -32,7 +32,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
       <section className="banks">
         <div className="flex w-full justify-between">
           <h2 className="header-2">My Banks</h2>
-          <Link href="/" className="flex gap-2">
+          <Link href="/" className="flex flex-center gap-2">
             <Image 
                src="/icons/plus.svg"
               width={20}

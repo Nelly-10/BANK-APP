@@ -1,9 +1,16 @@
 /* eslint-disable no-unused-vars */
 
-declare type SearchParamProps = {
-  params: { [key: string]: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+// declare type SearchParamProps = {
+//   params: { [key: string]: string };
+//   searchParams: { [key: string]: string | string[] | undefined };
+// };
+
+interface SearchParamProps {
+  searchParams: Promise<{
+    id?: string;
+    page?: string;
+  }>;
+}
 
 // ========================================
 
@@ -99,7 +106,7 @@ declare type AccountTypes =
   | "investment"
   | "other";
 
-declare type Category = "Food and Drink" | "Travel" | "Transfer";
+declare type Category = "Food and Drink" | "Travel" | "Transfer" | "Payment";
 
 declare type CategoryCount = {
   name: string;
@@ -179,14 +186,14 @@ declare interface PlaidLinkProps {
   dwollaCustomerId?: string;
 }
 
-// declare type User = sdk.Models.Document & {
-//   accountId: string;
-//   email: string;
-//   name: string;
-//   items: string[];
-//   accessToken: string;
-//   image: string;
-// };
+declare type User = sdk.Models.Document & {
+  accountId: string;
+  email: string;
+  name: string;
+  items: string[];
+  accessToken: string;
+  image: string;
+};
 
 declare interface AuthFormProps {
   type: "sign-in" | "sign-up";

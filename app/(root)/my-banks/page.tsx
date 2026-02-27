@@ -37,4 +37,4 @@ const MyBanks = async () => {
   )
 }
 
-export default MyBanks
+export default MyBanks;

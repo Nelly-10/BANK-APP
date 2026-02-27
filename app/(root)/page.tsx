@@ -34,7 +34,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
 
 
   return (
-    <section className='home'>
+    <section className='home no-scrollbar'>
       <div className='home-content'>
         <header className='home-header'>
           <HeaderBox

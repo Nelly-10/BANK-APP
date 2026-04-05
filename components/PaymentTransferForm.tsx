@@ -24,7 +24,8 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { BankDropdown } from "./BankDropDown";
+import { BankDropDown } from "./BankDropdown";
+
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -66,15 +67,16 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
       };
       // create transfer
       const transfer = await createTransfer(transferParams);
+      console.log("tf asap", transfer);
 
       // create transfer transaction
       if (transfer) {
         const transaction = {
           name: data.name,
           amount: data.amount,
-          senderId: senderBank.userId.$id,
+          senderId: senderBank.userId?.$id || senderBank.userId,
           senderBankId: senderBank.$id,
-          receiverId: receiverBank.userId.$id,
+          receiverId: receiverBank.userId?.$id || receiverBank.userId,
           receiverBankId: receiverBank.$id,
           email: data.email,
         };
@@ -112,7 +114,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                 </div>
                 <div className="flex w-full flex-col">
                   <FormControl>
-                    <BankDropdown
+                    <BankDropDown
                       accounts={accounts}
                       setValue={form.setValue}
                       otherStyles="!w-full"
@@ -237,7 +239,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
         />
 
         <div className="payment-transfer_btn-box">
-          <Button type="submit" className="payment-transfer_btn">
+          <Button type="submit" className="payment-transfer_btn bg-bank-gradient shadow-form">
             {isLoading ? (
               <>
                 <Loader2 size={20} className="animate-spin" /> &nbsp; Sending...

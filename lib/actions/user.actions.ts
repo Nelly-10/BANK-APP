@@ -129,6 +129,8 @@ export async function getLoggedInUser() {
   }
 }
 
+
+
 export const getBanks = async ({ userId }: getBanksProps) => {
   try {
     const { database } = await createAdminClient();

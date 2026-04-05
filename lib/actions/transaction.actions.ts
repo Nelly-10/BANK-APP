@@ -10,8 +10,10 @@ const {
 } = process.env;
 
 export const createTransaction = async (transaction: CreateTransactionProps) => {
+
   try {
     const { database } = await createAdminClient();
+    // console.log("✅ got database client");
 
     const newTransaction = await database.createDocument(
       DATABASE_ID!,
@@ -23,7 +25,7 @@ export const createTransaction = async (transaction: CreateTransactionProps) => 
         ...transaction
       }
     )
-    console.log("Transaction id:", TRANSACTION_COLLECTION_ID);
+    // console.log("New tran:", newTransaction);
 
     return parseStringify(newTransaction);
   } catch (error) {

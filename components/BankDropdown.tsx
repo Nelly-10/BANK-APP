@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { formUrlQuery, formatAmount } from "@/lib/utils";
 
-export const BankDropdown = ({
+export const BankDropDown = ({
   accounts = [],
   setValue,
   otherStyles,
